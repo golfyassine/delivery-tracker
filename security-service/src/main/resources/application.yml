@@ -1,0 +1,19 @@
+server:
+  port: 8080 # Le service de sécurité sur le port 8080
+
+spring:
+  application:
+    name: security-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/suivie_db
+    username: postgres
+    password: Yassine2001*
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
