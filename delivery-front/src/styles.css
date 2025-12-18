@@ -1,0 +1,7 @@
+/* Style de base Leaflet */
+@import 'leaflet/dist/leaflet.css';
+
+/* AJOUT : Style pour le tracé routier */
+@import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+
+body { margin: 0; font-family: Roboto, sans-serif; }

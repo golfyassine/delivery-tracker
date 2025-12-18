@@ -1,0 +1,45 @@
+<div style="font-family: Arial, sans-serif; text-align: center; margin-top: 30px;">
+
+  <h1>📦 Delivery Tracker</h1>
+
+  <div style="margin-bottom: 30px; background: #f4f4f4; padding: 20px; display: inline-block; border-radius: 10px;">
+    <input type="text"
+           [(ngModel)]="idRecherche"
+           placeholder="N° de Livraison (ex: 1)"
+           style="padding: 10px; font-size: 16px; width: 200px; border: 1px solid #ccc; border-radius: 5px;">
+
+    <button (click)="rechercher()"
+            style="padding: 10px 20px; font-size: 16px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+      🔍 Rechercher
+    </button>
+  </div>
+
+  <hr style="opacity: 0.3; margin-bottom: 30px;">
+
+  @if (livraison) {
+    <div style="max-width: 800px; margin: 0 auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+
+      <div style="background-color: #007bff; color: white; padding: 15px;">
+        <h2 style="margin: 0;">Livreur : {{ livraison?.livreur }}</h2>
+        <p style="margin: 5px 0 0 0;">Statut : <strong>{{ livraison?.statutLivraison }}</strong></p>
+      </div>
+
+      <div id="map" style="height: 500px; width: 100%;"></div>
+
+      <div style="padding: 15px; background-color: #fff; text-align: left; display: flex; justify-content: space-around;">
+        <div>
+          <p>📍 <strong>Actuellement à :</strong></p>
+          <p>{{ livraison?.colisInfo?.adresseActuelle }}</p>
+        </div>
+        <div>
+          <p>🏁 <strong>Destination :</strong></p>
+          <p>{{ livraison?.colisInfo?.adresseDestination }}</p>
+        </div>
+      </div>
+
+    </div>
+  } @else {
+    <p style="color: grey; margin-top: 50px;">Veuillez entrer un numéro de livraison pour voir le suivi.</p>
+  }
+
+</div>
