@@ -1,0 +1,43 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      # --- NOUVEAU : CONFIGURATION CORS (Pour autoriser Angular) ---
+      globalcors:
+        cors-configurations:
+          '[/**]': # Pour toutes les routes
+            allowedOrigins: "http://localhost:4200" # Seul ton Angular a le droit d'entrer
+            allowedMethods: "*" # GET, POST, PUT, DELETE, etc.
+            allowedHeaders: "*"
+      # -------------------------------------------------------------
+
+      routes:
+        - id: colis-route
+          uri: lb://COLIS-SERVICE
+          predicates:
+            - Path=/api/colis/**
+          filters:
+            - StripPrefix=1
+
+        - id: livraison-route
+          uri: lb://LIVRAISON-SERVICE
+          predicates:
+            - Path=/api/suivi/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

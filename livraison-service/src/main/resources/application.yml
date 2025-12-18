@@ -1,0 +1,30 @@
+server:
+  port: 8082 # Port 8082 (pour ne pas toucher au 8080 ou 8081 des autres)
+
+spring:
+  application:
+    name: livraison-service
+
+  datasource:
+    # C'est ici qu'on pointe vers ta base "suivie_db"
+    url: jdbc:postgresql://localhost:5432/suivie_db
+    username: postgres
+    password: Yassine2001* # <-- Mets ton vrai mot de passe ici
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
