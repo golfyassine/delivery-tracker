@@ -1,17 +1,61 @@
 <div class="login-container">
-  <div class="login-box">
-    <h2>🚚 Delivery Tracker - Connexion</h2>
-    <form (ngSubmit)="onLogin()">
-      <div class="input-group">
-        <label>Nom d'utilisateur</label>
-        <input type="text" [(ngModel)]="credentials.username" name="username" required>
+  <div class="login-card fade-in">
+    <div class="brand-logo">
+      <div class="logo-circle">
+        <i class="fas fa-truck-fast"></i>
       </div>
-      <div class="input-group">
-        <label>Mot de passe</label>
-        <input type="password" [(ngModel)]="credentials.password" name="password" required>
+      <h1>Delivery Tracker</h1>
+    </div>
+
+    <div class="login-header">
+      <h2>Bon retour !</h2>
+      <p>Connectez-vous pour gérer vos livraisons</p>
+    </div>
+
+    <form (ngSubmit)="onLogin()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="username">Identifiant</label>
+        <div class="input-wrapper">
+          <i class="fas fa-user"></i>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Votre pseudo (ex: admin)"
+            required>
+        </div>
       </div>
-      <button type="submit" class="btn-login">Se connecter</button>
-      <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="••••••••"
+            required>
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <button type="submit" class="btn-login" [disabled]="!loginForm.form.valid || isLoading">
+        <span *ngIf="!isLoading">Se connecter</span>
+        <div *ngIf="isLoading" class="loader"></div>
+      </button>
     </form>
+
+    <div class="login-footer">
+      <p>Pas encore de compte ? <a href="#">Contactez l'admin</a></p>
+    </div>
   </div>
 </div>
