@@ -1,0 +1,163 @@
+<div class="dashboard-container">
+  <header class="db-header">
+    <div class="welcome-text">
+      <h1><i class="fas fa-chart-line"></i> Dashboard Logistique</h1>
+      <p>Supervision des expéditions en temps réel.</p>
+    </div>
+    <div class="header-actions">
+      <div class="current-date">
+        <i class="fas fa-calendar-alt"></i> {{ today | date:'shortDate':'':'fr' }}
+      </div>
+      <button class="btn-logout" (click)="goToSearch()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-icon">
+        <i class="fas fa-box"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ livraisons.length }}</h3>
+        <p>Colis actifs</p>
+      </div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-icon">
+        <i class="fas fa-check-circle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getStatutCount('LIVRE') }}</h3>
+        <p>Livrés</p>
+      </div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon">
+        <i class="fas fa-truck"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getStatutCount('EN_ROUTE') }}</h3>
+        <p>En route</p>
+      </div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ getStatutCount('INCIDENT') }}</h3>
+        <p>Incidents</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="db-content">
+
+    <div class="recent-list card">
+      <div class="card-header">
+        <h2>Suivi Opérationnel</h2>
+      </div>
+
+      <table class="db-table">
+        <thead>
+        <tr>
+          <th>N° Suivi (Auto)</th>
+          <th>Livreur</th>
+          <th>Destination</th>
+          <th>Statut Colis</th>
+          <th>État Livraison</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let liv of livraisons">
+          <td><strong>{{ liv.colisInfo?.numeroSuivi || 'Chargement...' }}</strong></td>
+
+          <td>{{ liv.livreur }}</td>
+          <td>{{ liv.colisInfo?.adresseDestination || 'N/A' }}</td>
+
+          <td>
+              <span class="badge" [ngClass]="getBadgeClass(liv.colisInfo?.statut)">
+                {{ liv.colisInfo?.statut || 'N/A' }}
+              </span>
+          </td>
+
+          <td>
+            <div class="status-terrain">
+              <span class="dot" [ngClass]="getDotClass(liv.statutLivraison)"></span>
+              {{ liv.statutLivraison }}
+            </div>
+          </td>
+
+          <td>
+            <button class="btn-sm" (click)="viewDelivery(liv.id, liv.colisInfo?.numeroSuivi)">
+              <i class="fas fa-eye"></i>
+            </button>
+          </td>
+        </tr>
+
+        <tr *ngIf="livraisons.length === 0">
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            Aucune donnée. Créez votre premier colis !
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="quick-actions card">
+      <h2>Actions</h2>
+      <button class="action-btn primary" (click)="ouvrirModal()">
+        <i class="fas fa-plus-circle"></i> Créer Expédition
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Nouvelle Mission</h2>
+      <button class="btn-close" (click)="fermerModal()">&times;</button>
+    </div>
+
+    <form (ngSubmit)="enregistrerColis()">
+
+      <div class="form-group">
+        <label>Adresse de Destination</label>
+        <input type="text" [(ngModel)]="nouveauColisData.adresseDestination" name="addrDest" placeholder="Ville, Quartier..." required>
+      </div>
+
+      <div class="form-group">
+        <label>Livreur à assigner</label>
+        <input type="text" [(ngModel)]="livreurNom" name="livreur" placeholder="Ex: Karim Benz" required>
+      </div>
+
+      <div class="form-group">
+        <label>État de départ</label>
+        <div class="select-wrapper">
+          <select [(ngModel)]="etatInitialLivraison" name="etatLiv">
+            <option value="PREPARATION">📦 En Préparation</option>
+            <option value="EN_ROUTE">🚚 Immédiatement en route</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Zone de Notification -->
+      <div *ngIf="submissionMessage" class="notification-box" [ngClass]="submissionType">
+        <i class="fas" [ngClass]="submissionType === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'"></i>
+        {{ submissionMessage }}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" (click)="fermerModal()" [disabled]="isSubmitting">Annuler</button>
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">Valider & Générer</span>
+          <span *ngIf="isSubmitting"><i class="fas fa-spinner fa-spin"></i> Création en cours...</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

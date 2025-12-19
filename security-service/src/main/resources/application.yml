@@ -1,14 +1,19 @@
 server:
-  port: 8080 # Le service de sécurité sur le port 8080
+  port: 8080
 
 spring:
   application:
     name: security-service
+  cloud:
+    compatibility-verifier:
+      enabled: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/suivie_db
+    url: jdbc:postgresql://localhost:5432/security_db
     username: postgres
     password: Yassine2001*
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -17,3 +22,5 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true

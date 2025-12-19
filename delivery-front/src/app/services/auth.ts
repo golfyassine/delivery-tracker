@@ -12,8 +12,14 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/login`, credentials).pipe(
       tap(res => {
         // On enregistre le token et le nom d'utilisateur
-        localStorage.setItem('token', res.accessToken);
-        localStorage.setItem('username', res.username);
+        // Le backend retourne 'token' et 'username' selon AuthResponse
+        const token = res.token || res.accessToken; // Support des deux formats
+        if (token) {
+          localStorage.setItem('token', token);
+          localStorage.setItem('username', res.username || credentials.username);
+        } else {
+          console.error('Token non reçu dans la réponse:', res);
+        }
       })
     );
   }

@@ -11,36 +11,39 @@ spring:
           enabled: true
           lower-case-service-id: true
 
+      # Configuration CORS intégrée
       globalcors:
         cors-configurations:
           '[/**]':
             allowedOrigins: "http://localhost:4200"
             allowedMethods: "*"
             allowedHeaders: "*"
+            allowCredentials: true
 
       routes:
-        # 1. Route pour l'authentification (Accès libre)
+        # 1. Route pour l'authentification (Toujours sans filtre JWT !)
         - id: security-route
           uri: lb://SECURITY-SERVICE
           predicates:
             - Path=/auth/**
 
-        # 2. Route Colis (Protégée + Nettoyage /api)
-        - id: colis-route
-          uri: lb://COLIS-SERVICE
-          predicates:
-            - Path=/api/colis/**
-          filters:
-            - StripPrefix=1
-            - JwtAuthenticationFilter
-
-        # 3. Route Livraison (Protégée + Nettoyage /api)
+        # 2. Route pour le service Livraison (Tout ce qui commence par /LIVRAISON-SERVICE/)
         - id: livraison-route
           uri: lb://LIVRAISON-SERVICE
           predicates:
-            - Path=/api/suivi/**
+            - Path=/LIVRAISON-SERVICE/**
           filters:
-            - StripPrefix=1
+            # On enlève le préfixe /LIVRAISON-SERVICE/ avant d'envoyer au microservice
+            - RewritePath=/LIVRAISON-SERVICE/(?<segment>.*), /$\{segment}
+            - JwtAuthenticationFilter
+
+        # 3. Route pour le service Colis
+        - id: colis-route
+          uri: lb://COLIS-SERVICE
+          predicates:
+            - Path=/COLIS-SERVICE/**
+          filters:
+            - RewritePath=/COLIS-SERVICE/(?<segment>.*), /$\{segment}
             - JwtAuthenticationFilter
 
 eureka:

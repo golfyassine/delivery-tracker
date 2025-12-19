@@ -46,6 +46,7 @@ public class AuthController {
         if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             // Si OK, on génère le token
             String token = jwtUtils.generateToken(user.getUsername());
+            // AuthResponse attend (accessToken, username)
             return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
         } else {
             return ResponseEntity.status(401).body("Mot de passe incorrect");

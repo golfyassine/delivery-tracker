@@ -1,306 +1,111 @@
-<style>
-  .tracking-container {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    background-color: #f3f4f6;
-    min-height: 100vh;
-    padding: 40px 20px;
-    color: #1f2937;
-  }
-
-  /* Header & Recherche */
-  .header-section {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-  .app-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: #111827;
-    margin-bottom: 20px;
-    letter-spacing: -0.025em;
-  }
-  .search-box {
-    background: white;
-    padding: 10px;
-    border-radius: 50px;
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-    display: inline-flex;
-    width: 100%;
-    max-width: 500px;
-    transition: transform 0.2s;
-  }
-  .search-box:focus-within {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
-  }
-  .search-input {
-    border: none;
-    flex-grow: 1;
-    padding: 12px 20px;
-    font-size: 16px;
-    outline: none;
-    border-radius: 50px 0 0 50px;
-  }
-  .search-btn {
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  .search-btn:hover {
-    background-color: #1d4ed8;
-  }
-
-  /* Carte de résultat */
-  .tracking-card {
-    background: white;
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 24px;
-    overflow: hidden;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  }
-
-  /* En-tête de la carte */
-  .card-header {
-    background: #1e293b;
-    color: white;
-    padding: 24px 32px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .driver-info h2 { margin: 0; font-size: 1.25rem; }
-  .driver-info span { font-size: 0.875rem; color: #94a3b8; }
-  .status-badge {
-    background: #10b981;
-    color: white;
-    padding: 6px 16px;
-    border-radius: 9999px;
-    font-size: 0.875rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  /* Stepper (Frise de progression) */
-  .stepper-container {
-    padding: 30px 40px;
-    background: #f8fafc;
-    border-bottom: 1px solid #e2e8f0;
-  }
-  .stepper {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-  }
-  .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-    flex: 1;
-  }
-  .step-icon {
-    width: 40px;
-    height: 40px;
-    background: white;
-    border: 2px solid #e2e8f0;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 8px;
-    font-size: 1.2rem;
-  }
-  .step.active .step-icon {
-    border-color: #2563eb;
-    background: #eff6ff;
-    color: #2563eb;
-  }
-  .step-label {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #64748b;
-  }
-  .step.active .step-label { color: #1e293b; }
-
-  /* Ligne connecteur */
-  .progress-line {
-    position: absolute;
-    top: 20px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    z-index: 0;
-  }
-
-  /* Map */
-  .map-wrapper {
-    position: relative;
-    height: 500px;
-    width: 100%;
-    background-color: #e5e7eb;
-  }
-  #map {
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-  }
-
-  /* Détails et Actions */
-  .details-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 32px;
-  }
-  .detail-box {
-    background: #f8fafc;
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid #e2e8f0;
-  }
-  .detail-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    color: #64748b;
-    font-weight: 700;
-    margin-bottom: 8px;
-    display: block;
-  }
-  .detail-value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0f172a;
-  }
-
-  /* Boutons du bas (Mockup) */
-  .action-bar {
-    padding: 24px 32px;
-    background: white;
-    border-top: 1px solid #f1f5f9;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-  }
-  .btn-secondary {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: 1px solid #cbd5e1;
-    background: white;
-    color: #475569;
-    cursor: pointer;
-  }
-  .btn-primary {
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    border: none;
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
-  }
-  .btn-secondary:hover { background: #f8fafc; }
-  .btn-primary:hover { background: #1d4ed8; }
-
-</style>
-
 <div class="tracking-container">
 
   <div class="header-section">
-    <h1 class="app-title">📦 Delivery Tracker</h1>
+    <h1 class="app-title"><i class="fas fa-search-location"></i> Suivi de Livraison</h1>
 
     <div class="search-box">
       <input type="text"
              class="search-input"
              [(ngModel)]="idRecherche"
-             placeholder="Entrez votre n° de suivi (ex: 1)">
-      <button (click)="rechercher()" class="search-btn">
-        Suivre
+             (keyup.enter)="rechercher()"
+             placeholder="Entrez votre n° de suivi (ex: 1)"
+             [disabled]="isLoading">
+      <button (click)="rechercher()" 
+              class="search-btn"
+              [disabled]="isLoading">
+        <span *ngIf="!isLoading"><i class="fas fa-search"></i> Suivre</span>
+        <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i> Recherche...</span>
       </button>
     </div>
   </div>
 
-  @if (livraison) {
-    <div class="tracking-card">
+  <!-- Message d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="fas fa-exclamation-circle"></i> {{ errorMessage }}
+  </div>
 
-      <!-- En-tête Livreur & Statut -->
-      <div class="card-header">
-        <div class="driver-info">
-          <span>Votre livreur</span>
-          <h2>{{ livraison?.livreur }}</h2>
-        </div>
-        <div class="status-badge">
-          {{ livraison?.statutLivraison }}
-        </div>
+  <!-- État de chargement -->
+  <div *ngIf="isLoading && !livraison" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Recherche en cours...</p>
+  </div>
+
+  <div *ngIf="livraison && !isLoading" class="tracking-card">
+
+    <div class="card-header">
+      <div class="driver-info">
+        <span>Votre livreur</span>
+        <h2>{{ livraison.livreur }}</h2>
       </div>
-
-      <!-- Frise chronologique (Décorative pour l'idée) -->
-      <div class="stepper-container">
-        <div class="stepper">
-          <div class="progress-line"></div>
-
-          <div class="step active"> <!-- Active -->
-            <div class="step-icon">📋</div>
-            <div class="step-label">Commande</div>
-          </div>
-          <div class="step active">
-            <div class="step-icon">🚚</div>
-            <div class="step-label">En route</div>
-          </div>
-          <div class="step">
-            <div class="step-icon">🏠</div>
-            <div class="step-label">Livré</div>
-          </div>
-        </div>
+      <div class="status-badge" [attr.data-status]="livraison.statutLivraison">
+        <i class="fas" [ngClass]="getStatusIcon(livraison.statutLivraison)"></i>
+        {{ livraison.statutLivraison }}
       </div>
-
-      <!-- Carte -->
-      <div class="map-wrapper">
-        <div id="map"></div>
-      </div>
-
-      <!-- Informations détaillées -->
-      <div class="details-grid">
-        <div class="detail-box">
-          <span class="detail-label">📍 Destination</span>
-          <div class="detail-value">
-            {{ livraison?.colisInfo?.latitudeDest || '...' }},
-            {{ livraison?.colisInfo?.longitudeDest || '...' }}
-          </div>
-        </div>
-        <div class="detail-box">
-          <span class="detail-label">📦 Colis ID</span>
-          <div class="detail-value">#{{ livraison?.id || 'N/A' }}</div>
-        </div>
-        <div class="detail-box">
-          <span class="detail-label">⏱️ Estimation</span>
-          <div class="detail-value">15 - 20 min</div>
-        </div>
-      </div>
-
-      <!-- Boutons d'action (Idées) -->
-      <div class="action-bar">
-        <button class="btn-secondary">📞 Contacter le livreur</button>
-        <button class="btn-secondary">⚠️ Signaler un problème</button>
-        <button class="btn-primary">📄 Voir le reçu</button>
-      </div>
-
     </div>
-  } @else {
-    <!-- État vide décoratif -->
-    <div style="text-align: center; color: #9ca3af; margin-top: 50px;">
-      <p>Entrez un numéro de suivi ci-dessus pour localiser votre colis.</p>
+
+    <div class="stepper-container">
+      <div class="stepper">
+        <div class="progress-line">
+          <div class="progress-line-fill" [style.width.%]="getProgressPercentage()"></div>
+        </div>
+
+        <div class="step active">
+          <div class="step-icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="step-label">Validé</div>
+        </div>
+
+        <div class="step" [ngClass]="{'active': livraison.statutLivraison === 'EN_ROUTE' || livraison.statutLivraison === 'LIVRE'}">
+          <div class="step-icon">
+            <i class="fas fa-truck"></i>
+          </div>
+          <div class="step-label">En route</div>
+        </div>
+
+        <div class="step" [ngClass]="{'active': livraison.statutLivraison === 'LIVRE'}">
+          <div class="step-icon">
+            <i class="fas fa-home"></i>
+          </div>
+          <div class="step-label">Livré</div>
+        </div>
+      </div>
     </div>
-  }
+
+    <div class="map-wrapper">
+      <div id="map"></div>
+    </div>
+
+    <div class="details-grid">
+      <div class="detail-box">
+        <span class="detail-label">📍 Destination</span>
+        <div class="detail-value">
+          {{ livraison.colisInfo?.adresseDestination || 'Adresse GPS' }}
+        </div>
+      </div>
+
+      <div class="detail-box">
+        <span class="detail-label"><i class="fas fa-box"></i> Colis N°</span>
+        <div class="detail-value">{{ livraison.colisInfo?.numeroSuivi || 'N/A' }}</div>
+      </div>
+
+      <div class="detail-box">
+        <span class="detail-label"><i class="fas fa-clock"></i> Estimation</span>
+        <div class="detail-value">
+          {{ getEstimationText() }}
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <button class="btn-secondary">📞 Contacter</button>
+      <button class="btn-primary">📄 Reçu</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="!livraison && !isLoading && !errorMessage" class="empty-state">
+    <p><i class="fas fa-search"></i> Entrez un numéro de suivi ci-dessus pour localiser votre colis.</p>
+  </div>
 
 </div>

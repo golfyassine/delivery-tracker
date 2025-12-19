@@ -33,8 +33,7 @@ export class LoginComponent {
     this.authService.login({ username: this.username, password: this.password }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.router.navigate(['/recherche']); // Redirection vers la page de recherche
-      },
+        this.router.navigate(['/dashboard'])      },
       error: (err) => {
         this.isLoading = false;
         this.errorMessage = "Identifiants incorrects ou serveur indisponible.";

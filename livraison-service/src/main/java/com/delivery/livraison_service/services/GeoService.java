@@ -13,15 +13,15 @@ public class GeoService {
     private final RestClient restClient;
 
     public GeoService() {
-        // Remplacement de WebClient par RestClient (compatible Spring Boot 3.4 sans WebFlux)
         this.restClient = RestClient.builder()
                 .baseUrl("https://nominatim.openstreetmap.org")
+                // AJOUT CRITIQUE : Nominatim exige un User-Agent pour identifier ton app
+                .defaultHeader("User-Agent", "SpringDeliveryApp/1.0 (contact@email.com)")
                 .build();
     }
 
     public Map<String, Double> getCoordonnees(String adresse) {
         try {
-            // Appel API simplifié avec RestClient
             List<Map<String, Object>> response = this.restClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/search")
@@ -30,7 +30,6 @@ public class GeoService {
                             .queryParam("limit", "1")
                             .build())
                     .retrieve()
-                    // Plus besoin de .block(), RestClient est synchrone par défaut
                     .body(new ParameterizedTypeReference<List<Map<String, Object>>>() {});
 
             if (response != null && !response.isEmpty()) {
@@ -41,8 +40,8 @@ public class GeoService {
                 );
             }
         } catch (Exception e) {
-            System.err.println("Erreur de géolocalisation : " + e.getMessage());
+            System.err.println("Erreur de géolocalisation pour '" + adresse + "' : " + e.getMessage());
         }
-        return null; // Adresse non trouvée
+        return null;
     }
 }

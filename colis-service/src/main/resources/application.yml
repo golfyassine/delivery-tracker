@@ -1,18 +1,16 @@
 server:
-  port: 8081 # Port 8081 (Livraison est sur 8082, Eureka sur 8761)
+  port: 8081
 
 spring:
   application:
-    name: colis-service # Nom important pour Eureka
-
+    name: colis-service
   datasource:
     url: jdbc:postgresql://localhost:5432/colis_db
     username: postgres
-    password: Yassine2001* # <-- REMPLACE ICI
+    password: Yassine2001*
     driver-class-name: org.postgresql.Driver
-
   jpa:
-    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
       ddl-auto: update
